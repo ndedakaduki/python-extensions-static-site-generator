@@ -1,8 +1,11 @@
 import sys
 from pathlib import Path
 
+from ssg import extensions
+
 
 class Site:
+
     def __init__(self, source, dest, parsers=None):
         self.source = Path(source)
         self.dest = Path(dest)
@@ -22,11 +25,11 @@ class Site:
         if parser is not None:
             parser.parse(path, self.source, self.dest)
         else:
-            self.error(
-                "No parser for the {} extension, file skipped!".format(path.suffix)
-            )
+            self.error("No parser for the {} extension, file skipped!".format(
+                path.suffix))
 
     def build(self):
+        extensions.load_bundled()
         self.dest.mkdir(parents=True, exist_ok=True)
         for path in self.source.rglob("*"):
             if path.is_dir():
